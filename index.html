@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Todo Desk</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <svg class="sprite" aria-hidden="true">
+      <symbol id="icon-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.7-3.7" />
+      </symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24">
+        <path d="m5 12 4 4L19 6" />
+      </symbol>
+      <symbol id="icon-trash" viewBox="0 0 24 24">
+        <path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15" />
+      </symbol>
+      <symbol id="icon-calendar" viewBox="0 0 24 24">
+        <path d="M8 2v4M16 2v4M3 10h18M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" />
+      </symbol>
+      <symbol id="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+      </symbol>
+      <symbol id="icon-moon" viewBox="0 0 24 24">
+        <path d="M21 15.2A8.5 8.5 0 0 1 8.8 3a7 7 0 1 0 12.2 12.2Z" />
+      </symbol>
+      <symbol id="icon-edit" viewBox="0 0 24 24">
+        <path d="M12 20h9" />
+        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+      </symbol>
+    </svg>
+
+    <main class="app-shell">
+      <aside class="sidebar" aria-label="Todo overview">
+        <div class="brand">
+          <div class="brand-mark">TD</div>
+          <div>
+            <p>Todo Desk</p>
+            <span id="todayLabel">Today</span>
+          </div>
+        </div>
+
+        <section class="focus-panel" aria-labelledby="focusTitle">
+          <div>
+            <span class="eyebrow">Focus</span>
+            <h1 id="focusTitle">Keep the next thing visible.</h1>
+          </div>
+          <div class="progress-ring" aria-label="Completion progress">
+            <svg viewBox="0 0 120 120">
+              <circle class="track" cx="60" cy="60" r="48" />
+              <circle class="meter" id="progressMeter" cx="60" cy="60" r="48" />
+            </svg>
+            <strong id="progressText">0%</strong>
+          </div>
+        </section>
+
+        <div class="stats-grid" aria-label="Todo statistics">
+          <div>
+            <span id="totalCount">0</span>
+            <p>Total</p>
+          </div>
+          <div>
+            <span id="openCount">0</span>
+            <p>Open</p>
+          </div>
+          <div>
+            <span id="dueCount">0</span>
+            <p>Due</p>
+          </div>
+          <div>
+            <span id="doneCount">0</span>
+            <p>Done</p>
+          </div>
+        </div>
+
+        <nav class="filter-list" aria-label="Task filters">
+          <button class="filter-button active" data-filter="all" type="button">All tasks</button>
+          <button class="filter-button" data-filter="today" type="button">Today</button>
+          <button class="filter-button" data-filter="active" type="button">Active</button>
+          <button class="filter-button" data-filter="done" type="button">Done</button>
+        </nav>
+      </aside>
+
+      <section class="workspace" aria-label="Todo workspace">
+        <header class="topbar">
+          <div class="search-box">
+            <svg aria-hidden="true"><use href="#icon-search" /></svg>
+            <input id="searchInput" type="search" placeholder="Search tasks" autocomplete="off" />
+          </div>
+          <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+            <svg aria-hidden="true"><use href="#icon-moon" /></svg>
+          </button>
+        </header>
+
+        <form class="composer" id="todoForm">
+          <label class="task-input-label" for="taskInput">Task</label>
+          <input id="taskInput" type="text" placeholder="Add a task, e.g. Review budget draft" maxlength="120" required />
+          <div class="composer-controls">
+            <label>
+              <span>Due</span>
+              <input id="dueInput" type="date" />
+            </label>
+            <label>
+              <span>Priority</span>
+              <select id="priorityInput">
+                <option value="normal">Normal</option>
+                <option value="high">High</option>
+                <option value="low">Low</option>
+              </select>
+            </label>
+            <button class="primary-button" type="submit">
+              <svg aria-hidden="true"><use href="#icon-plus" /></svg>
+              Add
+            </button>
+          </div>
+        </form>
+
+        <div class="list-toolbar">
+          <div>
+            <h2 id="listTitle">All tasks</h2>
+            <p id="listSubtitle">No tasks yet</p>
+          </div>
+          <button class="quiet-button" id="clearDone" type="button">Clear done</button>
+        </div>
+
+        <ul class="todo-list" id="todoList" aria-live="polite"></ul>
+
+        <section class="empty-state" id="emptyState" aria-hidden="true">
+          <div class="empty-visual">
+            <svg viewBox="0 0 160 120" role="img" aria-label="Neat checklist">
+              <rect x="22" y="12" width="116" height="92" rx="8" />
+              <path d="M48 41h64M48 60h44M48 79h58" />
+              <path class="accent" d="m31 40 7 7 14-18" />
+              <path class="accent" d="m31 79 7 7 14-18" />
+            </svg>
+          </div>
+          <h2>Nothing here yet</h2>
+          <p>Add a task or switch filters to see what needs attention.</p>
+        </section>
+      </section>
+    </main>
+
+    <template id="todoTemplate">
+      <li class="todo-item">
+        <button class="complete-button" type="button" aria-label="Toggle task">
+          <svg aria-hidden="true"><use href="#icon-check" /></svg>
+        </button>
+        <div class="todo-main">
+          <input class="edit-input" type="text" maxlength="120" aria-label="Edit task" />
+          <div class="todo-meta">
+            <span class="priority-pill"></span>
+            <span class="due-pill">
+              <svg aria-hidden="true"><use href="#icon-calendar" /></svg>
+              <span></span>
+            </span>
+          </div>
+        </div>
+        <button class="icon-button edit-button" type="button" aria-label="Edit task" title="Edit task">
+          <svg aria-hidden="true"><use href="#icon-edit" /></svg>
+        </button>
+        <button class="icon-button delete-button" type="button" aria-label="Delete task" title="Delete task">
+          <svg aria-hidden="true"><use href="#icon-trash" /></svg>
+        </button>
+      </li>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
